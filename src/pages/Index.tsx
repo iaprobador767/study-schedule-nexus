@@ -410,7 +410,16 @@ const StudyScheduleApp = () => {
 
 // Week View Component
 const WeekView = ({ weekDates, studyEvents, subjects, onCompleteEvent, getEventsForDate }) => {
-  const hours = Array.from({ length: 14 }, (_, i) => i + 8); // 8 AM to 9 PM
+  // Create hours array from 17:00 to 06:00 (next day)
+  const hours = [
+    ...Array.from({ length: 8 }, (_, i) => i + 17), // 17, 18, 19, 20, 21, 22, 23
+    ...Array.from({ length: 7 }, (_, i) => i) // 0, 1, 2, 3, 4, 5, 6
+  ];
+
+  const formatHour = (hour: number) => {
+    if (hour === 0) return '00:00';
+    return `${hour.toString().padStart(2, '0')}:00`;
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
@@ -432,7 +441,7 @@ const WeekView = ({ weekDates, studyEvents, subjects, onCompleteEvent, getEvents
         {hours.map(hour => (
           <React.Fragment key={hour}>
             <div className="p-4 text-sm text-gray-500 border-b border-gray-100">
-              {hour}:00
+              {formatHour(hour)}
             </div>
             {weekDates.map((date, dayIndex) => {
               const events = getEventsForDate(date).filter(event => {
